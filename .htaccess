@@ -1,0 +1,36 @@
+# Apache (OVH): HTTPS + www, old URLs, compression, cache.
+Options -Indexes
+ErrorDocument 404 /404.html
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://www.le-bistrot-du-theatre-restaurant-jouy-le-moutier.fr%{REQUEST_URI} [L,R=301]
+</IfModule>
+<IfModule mod_alias.c>
+Redirect 301 /le-restaurant-le-bistrot-du-theatre-jouy-le-moutier-cristophe-bayle /notre-histoire/
+Redirect 301 /repas-de-groupe-anniversaire-conference-congres-seminaire-le-bistrot-du-theatre-restaurant-jouy-le-moutier-spectacle-cergy /groupes-et-receptions/
+Redirect 301 /programmation-le-bistrot-du-theatre-restaurant-jouy-le-moutier /diners-spectacles/
+Redirect 301 /diners-spectacles-le-bistrot-du-theatre-restaurant-jouy-le-moutier-soiree-artiste-scene-spectacle-musique-chnateur-humouriste-comedyclub-95-cergy /diners-spectacles/
+Redirect 301 /la-carte-le-bistrot-du-theatre-restaurant-jouy-le-moutier-resto-cergy-95 /la-carte/
+Redirect 301 /reception-le-bistrot-du-theatre-restaurant-service-traiteur-jouy-le-moutier-cergy-95 /groupes-et-receptions/
+Redirect 301 /notre-histoire-le-bistrot-du-theatre-restaurant-jouy-le-moutier /notre-histoire/
+Redirect 301 /adresse-horaires-telephone-le-bistrot-du-theatre-restaurant-jouy-le-moutier-95280-95 /contact/
+</IfModule>
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml image/svg+xml application/ld+json
+</IfModule>
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Strict-Transport-Security "max-age=31536000"
+<FilesMatch "\.(woff2)$">
+Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+<FilesMatch "\.(webp|jpg|svg)$">
+Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+<FilesMatch "\.(html|xml|txt)$">
+Header set Cache-Control "public, max-age=300, must-revalidate"
+</FilesMatch>
+</IfModule>
